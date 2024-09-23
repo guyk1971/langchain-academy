@@ -9,7 +9,7 @@ MY_UNAME=$(id -un)
 BASE_IMAGE=nvcr.io/nvidia/pytorch:23.10-py3
 mkdir -p ${DIR}/.vscode-server
 LINK=$(realpath --relative-to="/home/${MY_UNAME}" "$DIR" -s)
-IMAGE=genai_sb
+IMAGE=lc_acc
 if [ -z "$(docker images -q ${IMAGE})" ]; then
     # Create dev.dockerfile
     FILE=dev.dockerfile
@@ -33,7 +33,9 @@ if [ -z "$(docker images -q ${IMAGE})" ]; then
     echo "  COPY docker.bashrc /home/${MY_UNAME}/.bashrc" >> $FILE     
     echo "  RUN source /home/${MY_UNAME}/.bashrc" >> $FILE
    # START: install any additional package required for your image here
-    echo "  RUN pip install transformers accelerate bitsandbytes peft datasets wandb pynvml tensorboard opencv_python lightning" >> $FILE
+    echo "  COPY requirements.txt $DIR" >> $FILE     
+    echo "  RUN pip install -r $DIR/requirements.txt" >> $FILE
+    # echo "  RUN pip install transformers accelerate bitsandbytes peft datasets wandb pynvml tensorboard opencv_python lightning" >> $FILE
     echo "  ENV HF_HOME='/home/${MY_UNAME}/.cache/huggingface'" >> $FILE
     # END: install any additional package required for your image here
     echo "  ENV PATH='/home/${MY_UNAME}/.local/bin:${PATH}'"
@@ -76,7 +78,7 @@ docker run \
     ${MOUNT_DATA_FOLDER} \
     ${MOUNT_CACHE_FOLDER} \
     --shm-size=8g \
-    --name genai_sb  \
+    --name lc_acc  \
     ${IMAGE}
 
     # --mount type=bind,source=/home/scratch.svc_compute_arch,target=/home/scratch.svc_compute_arch \

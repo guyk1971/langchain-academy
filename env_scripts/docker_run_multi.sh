@@ -4,7 +4,7 @@ DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 cd $DIR
 
 MY_UNAME=$(id -un)
-IMAGE=genai_sb:dev
+IMAGE=lc_acc:dev
 
 # map the .cache of the scratch into the .cache in the container
 CACHE_FOLDER_ON_HOST=/home/${MY_UNAME}/scratch/.cache/
